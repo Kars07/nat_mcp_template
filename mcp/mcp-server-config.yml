@@ -1,0 +1,44 @@
+# PDF Summarizer MCP Server Configuration
+functions:
+  read_pdf:
+    _type: pdf_reader
+    description: "Reads a PDF file and extracts text content"
+    max_pages: null
+
+  summarize_text:
+    _type: llm_summarizer
+    llm_name: summarizer_llm
+    description: "Generates a detailed summary with key points"
+    max_summary_length: 500
+    include_key_points: true
+    summary_style: "comprehensive"
+
+llms:
+  summarizer_llm:
+    _type: nim
+    model_name: nvidia/nvidia-nemotron-nano-9b-v2
+    api_key: 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
+    temperature: 0.3
+    max_tokens: 2048
+
+workflow:
+  _type: react_agent
+  description: "AI agent that reads and summarizes PDF documents"
+  tool_names:
+    - read_pdf
+    - summarize_text
+  llm_name: summarizer_llm
+  verbose: true
+  parse_agent_response_max_retries: 3
+  max_tool_calls: 15
+
+general:
+  front_end:
+    _type: mcp
+    name: "PDF Summarizer MCP Server"
+    host: "localhost"
+    port: 9901
+    debug: true  
+    log_level: "DEBUG"  
+    transport: "sse" 
+    tool_names: []

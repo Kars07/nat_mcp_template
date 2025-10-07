@@ -1,0 +1,45 @@
+# Client that connects to the MCP server
+functions:
+  pdf_reader_remote:
+    _type: mcp_tool_wrapper
+    url: "http://localhost:9901/sse"
+    transport: "sse"
+    mcp_tool_name: read_pdf
+    description: "Reads PDF files from remote MCP server"
+  
+  summarizer_remote:
+    _type: mcp_tool_wrapper
+    url: "http://localhost:9901/sse"
+    transport: "sse"
+    mcp_tool_name: summarize_text
+    description: "Summarizes text using remote MCP server"
+  
+  react_agent_remote:
+    _type: mcp_tool_wrapper
+    url: "http://localhost:9901/sse"
+    transport: "sse"
+    mcp_tool_name: react_agent
+    description: "Full PDF summarization workflow from remote MCP server"
+
+llms:
+  client_llm:
+    _type: nim
+    model_name: nvidia/nvidia-nemotron-nano-9b-v2
+    api_key: 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
+    temperature: 0.3
+    max_tokens: 1024
+
+workflow:
+  _type: react_agent
+  tool_names:
+    - react_agent_remote
+  llm_name: client_llm
+  verbose: true
+  parse_agent_response_max_retries: 3
+  max_tool_calls: 10
+
+general:
+  front_end:
+    _type: console
+  front_end:
+    _type: fastapi

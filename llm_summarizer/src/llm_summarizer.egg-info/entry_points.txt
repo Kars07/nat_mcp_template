@@ -1,0 +1,2 @@
+[nat.components]
+llm_summarizer = llm_summarizer.register
