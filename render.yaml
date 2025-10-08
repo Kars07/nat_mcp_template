@@ -1,0 +1,55 @@
+services:
+  # MCP Server Service
+  - type: web
+    name: mcp-server
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: |
+      pip install --upgrade pip
+      cd pdf_reader && pip install -e . && cd ..
+      cd llm_summarizer && pip install -e . && cd ..
+      pip install -e .
+      pip install PyMuPDF python-multipart
+    startCommand: |
+      nat serve --config mcp/mcp-server-config.yml
+    envVars:
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: PORT
+        value: 9901
+      - key: HOST
+        value: 0.0.0.0
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /health
+
+  # MCP Client Service (Optional - for testing)
+  - type: web
+    name: mcp-client
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: |
+      pip install --upgrade pip
+      cd pdf_reader && pip install -e . && cd ..
+      cd llm_summarizer && pip install -e . && cd ..
+      pip install -e .
+      pip install PyMuPDF python-multipart
+    startCommand: |
+      nat serve --config mcp/mcp-client-config.yml
+    envVars:
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: MCP_SERVER_URL
+        fromService:
+          type: web
+          name: mcp-server
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /health

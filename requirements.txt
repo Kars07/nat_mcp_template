@@ -1,0 +1,24 @@
+# Core dependencies
+nvidia-nat[langchain]>=1.2.0
+aiqtoolkit>=1.2.0
+
+# Web framework
+fastapi
+uvicorn[standard]
+
+# PDF processing
+PyMuPDF
+
+# Additional utilities
+python-multipart
+pydantic>=2.0.0
+python-dotenv
+
+# Optional: for better performance
+uvloop
+
+# Development (optional)
+pytest
+black
+isort
+flake8

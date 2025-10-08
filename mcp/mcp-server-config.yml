@@ -1,4 +1,4 @@
-# PDF Summarizer MCP Server Configuration
+# PDF Summarizer MCP Server Configuration for Render
 functions:
   read_pdf:
     _type: pdf_reader
@@ -17,7 +17,7 @@ llms:
   summarizer_llm:
     _type: nim
     model_name: nvidia/nvidia-nemotron-nano-9b-v2
-    api_key: 
+    api_key: ${NVIDIA_API_KEY}
     temperature: 0.3
     max_tokens: 2048
 
@@ -36,9 +36,14 @@ general:
   front_end:
     _type: mcp
     name: "PDF Summarizer MCP Server"
-    host: "localhost"
-    port: 9901
-    debug: true  
-    log_level: "DEBUG"  
-    transport: "sse" 
+    host: ${HOST:-0.0.0.0}
+    port: ${PORT:-9901}
+    debug: false
+    log_level: "INFO"
+    transport: "sse"
     tool_names: []
+  
+  logging:
+    console:
+      _type: console
+      level: INFO
